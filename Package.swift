@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "NotificationToast",
     platforms: [
-                .iOS(.v13),
+                .iOS(.v9),
             ],
     products: [
         .library(

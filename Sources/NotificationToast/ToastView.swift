@@ -15,19 +15,26 @@ public class ToastView: UIView {
             setupShadow()
         }
     }
-    
+
     private let height: CGFloat = 50
     private var hStack: UIStackView
     private let darkBackgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.13, alpha: 1.00)
     private let lightBackgroundColor = UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.00)
-    
+    private var viewBackgroundColor: UIColor? {
+        if #available(iOS 12.0, *) {
+            return traitCollection.userInterfaceStyle == .dark ? darkBackgroundColor : lightBackgroundColor
+        } else {
+            return lightBackgroundColor
+        }
+    }
+
     public var autoHide = true
 
     public init(title: String, subtitle: String? = nil, icon: UIImage? = nil) {
         hStack = UIStackView(frame: CGRect.zero)
         super.init(frame: CGRect.zero)
-        
-        backgroundColor = traitCollection.userInterfaceStyle == .dark ? darkBackgroundColor : lightBackgroundColor
+
+        backgroundColor = viewBackgroundColor
 
         getTopViewController()?.view.addSubview(self)
         hStack.spacing = 16
@@ -46,14 +53,22 @@ public class ToastView: UIView {
 
         if let icon = icon {
             let iconImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
-            iconImageView.tintColor = .label
+            if #available(iOS 13.0, *) {
+                iconImageView.tintColor = .label
+            } else {
+                iconImageView.tintColor = .black
+            }
             iconImageView.image = icon
             hStack.addArrangedSubview(iconImageView)
         }
 
         if let subtitle = subtitle {
             let subtitleLabel = UILabel(frame: CGRect.zero)
-            subtitleLabel.textColor = .secondaryLabel
+            if #available(iOS 13.0, *) {
+                subtitleLabel.textColor = .secondaryLabel
+            } else {
+                subtitleLabel.textColor = .lightGray
+            }
             subtitleLabel.numberOfLines = 1
             subtitleLabel.font = .systemFont(ofSize: 11, weight: .light)
             subtitleLabel.text = subtitle
@@ -86,12 +101,12 @@ public class ToastView: UIView {
             self.removeFromSuperview()
         }
     }
-    
+
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        backgroundColor = traitCollection.userInterfaceStyle == .dark ? darkBackgroundColor : lightBackgroundColor
+        backgroundColor = viewBackgroundColor
     }
-    
+
     private func getTopViewController() -> UIViewController? {
         let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
         if var topController = keyWindow?.rootViewController {
