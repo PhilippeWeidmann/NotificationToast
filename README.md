@@ -2,6 +2,9 @@
 # NotificationToast
 
 A view that tries to replicate iOS default toast message view.
+| Title  | Icon | Subtitle |
+| ------------- | ------------- | ------------- |
+| ![Title](./Screenshots/title.png)  | ![Icon](./Screenshots/icon.png) | ![Subtitle](./Screenshots/subtitle.png) |
 
 # Usage
 Add this lib to your project using SPM.
