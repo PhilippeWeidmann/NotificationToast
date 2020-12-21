@@ -108,7 +108,8 @@ public class ToastView: UIView {
     }
 
     private func getTopViewController() -> UIViewController? {
-        let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+        let windows = UIApplication.shared.windows
+        let keyWindow = windows.count == 1 ? windows.first : windows.filter { $0.isKeyWindow }.first
         if var topController = keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
