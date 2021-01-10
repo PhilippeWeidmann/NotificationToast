@@ -28,7 +28,10 @@ public class ToastView: UIView {
         }
     }
 
+    /// Hide the view auotmatically after showing ?
     public var autoHide = true
+    /// Display time for the notification view in seconds
+    public var displayTime: TimeInterval = 1
 
     public init(title: String, subtitle: String? = nil, icon: UIImage? = nil) {
         hStack = UIStackView(frame: CGRect.zero)
@@ -89,13 +92,13 @@ public class ToastView: UIView {
             self.transform = .identity
         }) { [self] (completed) in
             if autoHide {
-                hide()
+                hide(after: displayTime)
             }
         }
     }
 
-    public func hide() {
-        UIView.animate(withDuration: 0.2, delay: 1, options: .curveEaseOut, animations: {
+    public func hide(after time: TimeInterval) {
+        UIView.animate(withDuration: 0.2, delay: time, options: .curveEaseOut, animations: {
             self.transform = CGAffineTransform(translationX: 0, y: -100)
         }) { (completed) in
             self.removeFromSuperview()
