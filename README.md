@@ -24,6 +24,10 @@ let toast = ToastView(
 )
 toast.show()
 ```
+You can present the view with a haptic feedback at the same time (`nil` by default) :
+```swift
+toast.show(haptic: .success)
+```
 
 # Contribute
 As this is my first 'UI' package I'm sure it can be greatly improved, PR are welcome 😊
