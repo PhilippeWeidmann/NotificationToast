@@ -27,13 +27,16 @@ public class ToastView: UIView {
             return lightBackgroundColor
         }
     }
+    private var onTap: (() -> ())?
 
-    /// Hide the view auotmatically after showing ?
+    /// Hide the view automatically after showing ?
     public var autoHide = true
     /// Display time for the notification view in seconds
     public var displayTime: TimeInterval = 1
+    /// Hide the view automatically on tap ?
+    public var hideOnTap = true
 
-    public init(title: String, subtitle: String? = nil, icon: UIImage? = nil) {
+    public init(title: String, subtitle: String? = nil, icon: UIImage? = nil, onTap: (() -> ())? = nil) {
         hStack = UIStackView(frame: CGRect.zero)
         super.init(frame: CGRect.zero)
 
@@ -77,6 +80,10 @@ public class ToastView: UIView {
             subtitleLabel.text = subtitle
             vStack.addArrangedSubview(subtitleLabel)
         }
+
+        self.onTap = onTap
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        addGestureRecognizer(tapGestureRecognizer)
 
         hStack.addArrangedSubview(vStack)
         addSubview(hStack)
@@ -154,6 +161,13 @@ public class ToastView: UIView {
         layer.shadowColor = UIColor.black.withAlphaComponent(0.08).cgColor
         layer.shadowRadius = 8
         layer.shadowOpacity = 1
+    }
+
+    @objc private func didTap() {
+        if hideOnTap {
+            hide(after: 0)
+        }
+        onTap?()
     }
 
     required init?(coder: NSCoder) {

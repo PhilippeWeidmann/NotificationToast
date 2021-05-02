@@ -8,15 +8,20 @@ A view that tries to replicate iOS default toast message view.
 
 # Usage
 Add this lib to your project using SPM.
-```
+```swift
 import NotificationToast
 
 let toast = ToastView(title: "Safari pasted from Notes")
 toast.show()
 ```
-The view also includes optional subtitle and leading icon view :
-```
-let toast = ToastView(title: "Airpods Pro", subtitle: "Connected", icon: UIImage(systemName: "airpodspro"))
+The view also includes optional subtitle, leading icon view, and on tap callback :
+```swift
+let toast = ToastView(
+    title: "Airpods Pro",
+    subtitle: "Connected",
+    icon: UIImage(systemName: "airpodspro"),
+    onTap: { print("Tapped!") }
+)
 toast.show()
 ```
 
