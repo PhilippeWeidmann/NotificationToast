@@ -94,6 +94,14 @@ public class ToastView: UIView {
         transform = CGAffineTransform(translationX: 0, y: -100)
     }
 
+    @available(iOS 10.0, *)
+    public func show(haptic: UINotificationFeedbackGenerator.FeedbackType? = nil) {
+        if let hapticType = haptic {
+            UINotificationFeedbackGenerator().notificationOccurred(hapticType)
+        }
+        show()
+    }
+
     public func show() {
         UIView.animate(withDuration: 0.4, delay: 0.0, options: .curveEaseOut, animations: {
             self.transform = .identity
