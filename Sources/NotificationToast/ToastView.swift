@@ -105,11 +105,13 @@ public class ToastView: UIView {
     }
 
     public func hide(after time: TimeInterval) {
-        UIView.animate(withDuration: 0.2, delay: time, options: .curveEaseOut, animations: {
-            self.transform = CGAffineTransform(translationX: 0, y: -100)
-        }) { (completed) in
-            self.removeFromSuperview()
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                self.transform = CGAffineTransform(translationX: 0, y: -100)
+            }) { (completed) in
+                self.removeFromSuperview()
+            }
+        })
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
