@@ -36,14 +36,16 @@ public class ToastView: UIView {
     /// Hide the view automatically on tap ?
     public var hideOnTap = true
 
-    public init(title: String, subtitle: String? = nil, icon: UIImage? = nil, onTap: (() -> ())? = nil) {
+    public init(title: String, titleFont: UIFont = .systemFont(ofSize: 13, weight: .regular),
+                subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
+                icon: UIImage? = nil, iconSpacing: CGFloat = 16, onTap: (() -> ())? = nil) {
         hStack = UIStackView(frame: CGRect.zero)
         super.init(frame: CGRect.zero)
 
         backgroundColor = viewBackgroundColor
 
         getTopViewController()?.view.addSubview(self)
-        hStack.spacing = 16
+        hStack.spacing = iconSpacing
         hStack.axis = .horizontal
         hStack.alignment = .center
 
@@ -53,7 +55,7 @@ public class ToastView: UIView {
 
         let titleLabel = UILabel(frame: CGRect.zero)
         titleLabel.numberOfLines = 1
-        titleLabel.font = .systemFont(ofSize: 13, weight: .regular)
+        titleLabel.font = titleFont
         titleLabel.text = title
         vStack.addArrangedSubview(titleLabel)
 
@@ -76,7 +78,7 @@ public class ToastView: UIView {
                 subtitleLabel.textColor = .lightGray
             }
             subtitleLabel.numberOfLines = 1
-            subtitleLabel.font = .systemFont(ofSize: 11, weight: .light)
+            subtitleLabel.font = subtitleFont
             subtitleLabel.text = subtitle
             vStack.addArrangedSubview(subtitleLabel)
         }
