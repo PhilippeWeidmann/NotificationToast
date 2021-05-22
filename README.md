@@ -14,12 +14,15 @@ import NotificationToast
 let toast = ToastView(title: "Safari pasted from Notes")
 toast.show()
 ```
-The view also includes optional subtitle, leading icon view, and on tap callback :
+The view also includes optional subtitle, leading icon view, custom font, icon spacing and on tap callback :
 ```swift
 let toast = ToastView(
     title: "Airpods Pro",
+    titleFont: .systemFont(ofSize: 13, weight: .regular),
     subtitle: "Connected",
+    subtitleFont: .systemFont(ofSize: 11, weight: .light),
     icon: UIImage(systemName: "airpodspro"),
+    iconSpacing: 16,
     onTap: { print("Tapped!") }
 )
 toast.show()
