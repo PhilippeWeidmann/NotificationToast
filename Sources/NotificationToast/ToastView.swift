@@ -71,7 +71,7 @@ public class ToastView: UIView {
     public var autoHide = true
     
     /// Display time for the notification view in seconds
-    public var displayTime: TimeInterval = 3
+    public var displayTime: TimeInterval = 1
     
     /// Appearence animation duration
     public var showAnimationDuration = 0.3
