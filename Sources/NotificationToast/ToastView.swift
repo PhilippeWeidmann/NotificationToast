@@ -44,7 +44,12 @@ public class ToastView: UIView {
 
         backgroundColor = viewBackgroundColor
 
-        getTopViewController()?.view.addSubview(self)
+        if let rootViewController = UIApplication.shared.windows.first!.rootViewController {
+            
+            rootViewController.view.addSubview(self)
+            
+        }
+        
         hStack.spacing = iconSpacing
         hStack.axis = .horizontal
         hStack.alignment = .center
