@@ -35,6 +35,8 @@ public class ToastView: UIView {
     public var displayTime: TimeInterval = 1
     /// Hide the view automatically on tap ?
     public var hideOnTap = true
+    /// Show on top window, if not use current root VC
+    public var useTopWindow = true
 
     public init(title: String, titleFont: UIFont = .systemFont(ofSize: 13, weight: .regular),
                 subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
@@ -44,11 +46,7 @@ public class ToastView: UIView {
 
         backgroundColor = viewBackgroundColor
 
-        if let rootViewController = UIApplication.shared.windows.first!.rootViewController {
-            
-            rootViewController.view.addSubview(self)
-            
-        }
+        getViewController()?.view.addSubview(self)
         
         hStack.spacing = iconSpacing
         hStack.axis = .horizontal
@@ -134,14 +132,18 @@ public class ToastView: UIView {
         backgroundColor = viewBackgroundColor
     }
 
-    private func getTopViewController() -> UIViewController? {
+    private func getViewController() -> UIViewController? {
+        
         let windows = UIApplication.shared.windows
         let keyWindow = windows.count == 1 ? windows.first : windows.filter { $0.isKeyWindow }.first
+        let rootViewController = windows.first!.rootViewController
         if var topController = keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
-            return topController
+            
+            return useTopWindow ? topController : rootViewController
+            
         } else {
             return nil
         }
