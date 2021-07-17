@@ -228,7 +228,8 @@ public class ToastView: UIView {
             topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 8),
             bottomAnchor.constraint(lessThanOrEqualTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8),
             leadingAnchor.constraint(greaterThanOrEqualTo: superview.leadingAnchor, constant: 8),
-            trailingAnchor.constraint(lessThanOrEqualTo: superview.trailingAnchor, constant: -8)
+            trailingAnchor.constraint(lessThanOrEqualTo: superview.trailingAnchor, constant: -8),
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
         ])
     }
 
