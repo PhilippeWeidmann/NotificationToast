@@ -8,6 +8,7 @@
 import UIKit
 import QuartzCore
 
+@available(iOSApplicationExtension, unavailable)
 public class ToastView: UIView {
     public enum TextAlignment {
         case left
