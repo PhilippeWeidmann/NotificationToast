@@ -5,8 +5,8 @@
 //  Created by Philippe Weidmann on 20.12.20.
 //
 
-import UIKit
 import QuartzCore
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 public class ToastView: UIView {
@@ -16,7 +16,7 @@ public class ToastView: UIView {
         case right
     }
 
-    public override var bounds: CGRect {
+    override public var bounds: CGRect {
         didSet {
             setupShadow()
         }
@@ -28,14 +28,14 @@ public class ToastView: UIView {
         stackView.alignment = .center
         return stackView
     }()
-    
+
     private lazy var vStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = vStackAlignment
         return stackView
     }()
-    
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
@@ -46,7 +46,7 @@ public class ToastView: UIView {
         }
         return label
     }()
-    
+
     private var viewBackgroundColor: UIColor? {
         if #available(iOS 12.0, *) {
             return traitCollection.userInterfaceStyle == .dark ? darkBackgroundColor : lightBackgroundColor
@@ -54,7 +54,7 @@ public class ToastView: UIView {
             return lightBackgroundColor
         }
     }
-    
+
     private var vStackAlignment: UIStackView.Alignment {
         switch textAlignment {
         case .left:
@@ -65,38 +65,38 @@ public class ToastView: UIView {
             return .trailing
         }
     }
-    
+
     private var onTap: (() -> ())?
 
     /// Hide the view automatically after showing ?
     public var autoHide = true
-    
+
     /// Display time for the notification view in seconds
     public var displayTime: TimeInterval = 1
-    
+
     /// Appearence animation duration
     public var showAnimationDuration = 0.3
-    
+
     /// Disappearence animation duration
     public var hideAnimationDuration = 0.3
-    
+
     /// Hide the view automatically on tap ?
     public var hideOnTap = true
-    
+
     /// Title and subtitle text alignment
     public var textAlignment: TextAlignment = .center {
         didSet {
             vStack.alignment = vStackAlignment
         }
     }
-    
+
     /// Title text color
     public var titleTextColor: UIColor = .black {
         didSet {
             titleLabel.textColor = titleTextColor
         }
     }
-    
+
     /// Background color in dark mode
     public var darkBackgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.13, alpha: 1.00) {
         didSet {
@@ -119,7 +119,7 @@ public class ToastView: UIView {
         backgroundColor = viewBackgroundColor
 
         getTopViewController()?.view.addSubview(self)
-        
+
         hStack.spacing = iconSpacing
 
         titleLabel.font = titleFont
@@ -169,8 +169,8 @@ public class ToastView: UIView {
         transform = initialTransform
         clipsToBounds = true
     }
-    
-    public override func layoutSubviews() {
+
+    override public func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = bounds.height / 2
     }
@@ -194,16 +194,16 @@ public class ToastView: UIView {
     }
 
     public func hide(after time: TimeInterval = 0.0) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + time) {
             UIView.animate(withDuration: self.hideAnimationDuration, delay: 0, options: .curveEaseIn, animations: { [self] in
                 transform = initialTransform
             }) { [self] _ in
                 removeFromSuperview()
             }
-        })
+        }
     }
 
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         backgroundColor = viewBackgroundColor
     }
@@ -236,12 +236,12 @@ public class ToastView: UIView {
 
     private func setupStackViewConstraints() {
         hStack.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
-            hStack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-            hStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
-            hStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
-            hStack.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
+            hStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            hStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            hStack.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            hStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
         ])
     }
 
@@ -260,6 +260,7 @@ public class ToastView: UIView {
         onTap?()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
