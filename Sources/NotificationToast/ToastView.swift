@@ -111,14 +111,16 @@ public class ToastView: UIView {
         }
     }
 
+    private var overlayWindow: ToastViewWindow!
+
     public init(title: String, titleFont: UIFont = .systemFont(ofSize: 13, weight: .regular),
                 subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
                 icon: UIImage? = nil, iconSpacing: CGFloat = 16, onTap: (() -> ())? = nil) {
         super.init(frame: .zero)
+        overlayWindow = ToastViewWindow()
+        overlayWindow.addToastView(self)
 
         backgroundColor = viewBackgroundColor
-
-        getTopViewController()?.view.addSubview(self)
 
         hStack.spacing = iconSpacing
 
@@ -184,6 +186,7 @@ public class ToastView: UIView {
     }
 
     public func show() {
+        overlayWindow.isHidden = false
         UIView.animate(withDuration: showAnimationDuration, delay: 0.0, options: .curveEaseOut, animations: {
             self.transform = .identity
         }) { [self] _ in
@@ -199,6 +202,7 @@ public class ToastView: UIView {
                 transform = initialTransform
             }) { [self] _ in
                 removeFromSuperview()
+                overlayWindow = nil
             }
         }
     }
@@ -206,19 +210,6 @@ public class ToastView: UIView {
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         backgroundColor = viewBackgroundColor
-    }
-
-    private func getTopViewController() -> UIViewController? {
-        let windows = UIApplication.shared.windows
-        let keyWindow = windows.count == 1 ? windows.first : windows.filter { $0.isKeyWindow }.first
-        if var topController = keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            return topController
-        } else {
-            return nil
-        }
     }
 
     private func setupConstraints() {
@@ -263,5 +254,39 @@ public class ToastView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+class ToastViewWindow: UIWindow {
+    init() {
+        if #available(iOS 13.0, *) {
+            if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                super.init(windowScene: scene)
+            } else {
+                super.init(frame: UIScreen.main.bounds)
+            }
+        } else {
+            super.init(frame: UIScreen.main.bounds)
+        }
+        rootViewController = UIViewController()
+        windowLevel = .alert
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    public func addToastView(_ toastView: ToastView) {
+        rootViewController?.view.addSubview(toastView)
+    }
+
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if let rootViewController = self.rootViewController,
+           let toastView = rootViewController.view.subviews.first as? ToastView {
+            return toastView.frame.contains(point)
+        }
+        return false
     }
 }
