@@ -261,8 +261,10 @@ public class ToastView: UIView {
 class ToastViewWindow: UIWindow {
     init() {
         if #available(iOS 13.0, *) {
-            if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                super.init(windowScene: scene)
+            if let activeForegroundScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                super.init(windowScene: activeForegroundScene)
+            } else if let inactiveForegroundScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundInactive }) as? UIWindowScene {
+                super.init(windowScene: inactiveForegroundScene)
             } else {
                 super.init(frame: UIScreen.main.bounds)
             }

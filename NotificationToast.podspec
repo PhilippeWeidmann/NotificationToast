@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'NotificationToast'
-  s.version          = '1.1.0'
+  s.version          = '1.1.1'
   s.summary          = 'Google toast the Apple way !'
 
   s.description      = <<-DESC
