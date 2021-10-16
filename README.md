@@ -7,14 +7,16 @@ A view that tries to replicate iOS default toast message view.
 | ![Title](./Screenshots/title.png)  | ![Icon](./Screenshots/icon.png) | ![Subtitle](./Screenshots/subtitle.png) |
 
 # Usage
-Add this lib to your project using SPM.
+Add this lib to your project using SPM or Cocoapods.
+
+To get the simple "Apple look" you only have to do this:
 ```swift
 import NotificationToast
 
 let toast = ToastView(title: "Safari pasted from Notes")
 toast.show()
 ```
-The view also includes optional subtitle, leading icon view, custom font, icon spacing and on tap callback :
+The view also includes many optional customizable properties:
 ```swift
 let toast = ToastView(
     title: "Airpods Pro",
@@ -23,6 +25,7 @@ let toast = ToastView(
     subtitleFont: .systemFont(ofSize: 11, weight: .light),
     icon: UIImage(systemName: "airpodspro"),
     iconSpacing: 16,
+    position: .bottom,
     onTap: { print("Tapped!") }
 )
 toast.show()

@@ -238,12 +238,12 @@ public class ToastView: UIView {
         case .top:
             constraints += [
                 topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 8),
-                bottomAnchor.constraint(lessThanOrEqualTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8),
+                bottomAnchor.constraint(lessThanOrEqualTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8)
             ]
         case .bottom:
             constraints += [
                 bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8),
-                topAnchor.constraint(greaterThanOrEqualTo: superview.layoutMarginsGuide.topAnchor, constant: 8),
+                topAnchor.constraint(greaterThanOrEqualTo: superview.layoutMarginsGuide.topAnchor, constant: 8)
             ]
         }
 
