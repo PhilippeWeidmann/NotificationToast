@@ -16,13 +16,18 @@ public class ToastView: UIView {
         case right
     }
 
+    public enum Position {
+        case top
+        case bottom
+    }
+
     override public var bounds: CGRect {
         didSet {
             setupShadow()
         }
     }
 
-    private let initialTransform = CGAffineTransform(translationX: 0, y: -100)
+    private let initialTransform: CGAffineTransform
     private let hStack: UIStackView = {
         let stackView = UIStackView()
         stackView.alignment = .center
@@ -115,7 +120,14 @@ public class ToastView: UIView {
 
     public init(title: String, titleFont: UIFont = .systemFont(ofSize: 13, weight: .regular),
                 subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
-                icon: UIImage? = nil, iconSpacing: CGFloat = 16, onTap: (() -> ())? = nil) {
+                icon: UIImage? = nil, iconSpacing: CGFloat = 16, position: Position = .top, onTap: (() -> ())? = nil) {
+        switch position {
+        case .top:
+            initialTransform = CGAffineTransform(translationX: 0, y: -100)
+        case .bottom:
+            initialTransform = CGAffineTransform(translationX: 0, y: 100)
+        }
+
         super.init(frame: .zero)
         overlayWindow = ToastViewWindow()
         overlayWindow.addToastView(self)
@@ -165,7 +177,7 @@ public class ToastView: UIView {
         hStack.addArrangedSubview(vStack)
         addSubview(hStack)
 
-        setupConstraints()
+        setupConstraints(position: position)
         setupStackViewConstraints()
 
         transform = initialTransform
@@ -212,17 +224,30 @@ public class ToastView: UIView {
         backgroundColor = viewBackgroundColor
     }
 
-    private func setupConstraints() {
+    private func setupConstraints(position: Position) {
         guard let superview = superview else { return }
         translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        var constraints = [
             centerXAnchor.constraint(equalTo: superview.centerXAnchor),
-            topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 8),
-            bottomAnchor.constraint(lessThanOrEqualTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8),
             leadingAnchor.constraint(greaterThanOrEqualTo: superview.leadingAnchor, constant: 8),
             trailingAnchor.constraint(lessThanOrEqualTo: superview.trailingAnchor, constant: -8),
             heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
-        ])
+        ]
+
+        switch position {
+        case .top:
+            constraints += [
+                topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor, constant: 8),
+                bottomAnchor.constraint(lessThanOrEqualTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8),
+            ]
+        case .bottom:
+            constraints += [
+                bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor, constant: -8),
+                topAnchor.constraint(greaterThanOrEqualTo: superview.layoutMarginsGuide.topAnchor, constant: 8),
+            ]
+        }
+
+        NSLayoutConstraint.activate(constraints)
     }
 
     private func setupStackViewConstraints() {
