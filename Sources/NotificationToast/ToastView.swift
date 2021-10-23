@@ -27,7 +27,15 @@ public class ToastView: UIView {
         }
     }
 
-    private let initialTransform: CGAffineTransform
+    private let position: Position
+    private var initialTransform: CGAffineTransform {
+        switch position {
+        case .top:
+            return CGAffineTransform(translationX: 0, y: -100)
+        case .bottom:
+            return CGAffineTransform(translationX: 0, y: 100)
+        }
+    }
     private let hStack: UIStackView = {
         let stackView = UIStackView()
         stackView.alignment = .center
@@ -116,21 +124,14 @@ public class ToastView: UIView {
         }
     }
 
-    private var overlayWindow: ToastViewWindow!
+    private var overlayWindow: ToastViewWindow?
 
     public init(title: String, titleFont: UIFont = .systemFont(ofSize: 13, weight: .regular),
                 subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
                 icon: UIImage? = nil, iconSpacing: CGFloat = 16, position: Position = .top, onTap: (() -> ())? = nil) {
-        switch position {
-        case .top:
-            initialTransform = CGAffineTransform(translationX: 0, y: -100)
-        case .bottom:
-            initialTransform = CGAffineTransform(translationX: 0, y: 100)
-        }
+        self.position = position
 
         super.init(frame: .zero)
-        overlayWindow = ToastViewWindow()
-        overlayWindow.addToastView(self)
 
         backgroundColor = viewBackgroundColor
 
@@ -177,11 +178,15 @@ public class ToastView: UIView {
         hStack.addArrangedSubview(vStack)
         addSubview(hStack)
 
-        setupConstraints(position: position)
-        setupStackViewConstraints()
-
         transform = initialTransform
         clipsToBounds = true
+    }
+
+    func prepareForShowing() {
+        overlayWindow = ToastViewWindow(toastView: self)
+        setupConstraints(position: position)
+        setupStackViewConstraints()
+        overlayWindow?.isHidden = false
     }
 
     override public func layoutSubviews() {
@@ -198,7 +203,13 @@ public class ToastView: UIView {
     }
 
     public func show() {
-        overlayWindow.isHidden = false
+        if overlayWindow == nil {
+            // We don't have a window we need to recreate one
+            prepareForShowing()
+        } else {
+            // We are still showing an alert with current window so we do nothing
+            return
+        }
         UIView.animate(withDuration: showAnimationDuration, delay: 0.0, options: .curveEaseOut, animations: {
             self.transform = .identity
         }) { [self] _ in
@@ -284,7 +295,7 @@ public class ToastView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 class ToastViewWindow: UIWindow {
-    init() {
+    init(toastView: ToastView) {
         if #available(iOS 13.0, *) {
             if let activeForegroundScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
                 super.init(windowScene: activeForegroundScene)
@@ -298,15 +309,12 @@ class ToastViewWindow: UIWindow {
         }
         rootViewController = UIViewController()
         windowLevel = .alert
+        rootViewController?.view.addSubview(toastView)
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    public func addToastView(_ toastView: ToastView) {
-        rootViewController?.view.addSubview(toastView)
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
