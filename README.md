@@ -38,3 +38,9 @@ toast.show(haptic: .success)
 # Contribute
 As this is my first 'UI' package I'm sure it can be greatly improved, PR are welcome 😊
 
+# Alternatives
+
+Drops 💧: https://github.com/omaralbeik/Drops  
+Bauly : https://github.com/wiencheck/Bauly
+
+
