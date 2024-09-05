@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'NotificationToast'
-  s.version          = '1.2.1'
+  s.version          = '2.0.0'
   s.summary          = 'Google toast the Apple way !'
 
   s.description      = <<-DESC
@@ -13,8 +13,8 @@ A view that tries to replicate iOS default toast message view.
   s.author           = { 'PhilippeWeidmann' => 'philweidmann@me.com' }
   s.source           = { :git => 'https://github.com/PhilippeWeidmann/NotificationToast.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '9.0'
-  s.swift_versions = '5.3'
+  s.ios.deployment_target = '13.0'
+  s.swift_versions = '5.10'
 
   s.source_files = 'Sources/NotificationToast/**/*'
 end
