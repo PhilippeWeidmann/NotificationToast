@@ -1,5 +1,7 @@
 
 # NotificationToast
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FPhilippeWeidmann%2FNotificationToast%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/PhilippeWeidmann/NotificationToast)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FPhilippeWeidmann%2FNotificationToast%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/PhilippeWeidmann/NotificationToast)  
 
 A view that tries to replicate iOS default toast message view.
 | Title  | Icon | Subtitle |
