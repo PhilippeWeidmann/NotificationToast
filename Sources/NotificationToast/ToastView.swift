@@ -36,6 +36,7 @@ public class ToastView: UIView {
             return CGAffineTransform(translationX: 0, y: 100)
         }
     }
+
     private let hStack: UIStackView = {
         let stackView = UIStackView()
         stackView.alignment = .center
@@ -79,7 +80,7 @@ public class ToastView: UIView {
         }
     }
 
-    private var onTap: (() -> ())?
+    private var onTap: (() -> Void)?
 
     /// Hide the view automatically after showing ?
     public var autoHide = true
@@ -128,7 +129,7 @@ public class ToastView: UIView {
 
     public init(title: String, titleFont: UIFont = .systemFont(ofSize: 13, weight: .regular),
                 subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
-                icon: UIImage? = nil, iconSpacing: CGFloat = 16, position: Position = .top, onTap: (() -> ())? = nil) {
+                icon: UIImage? = nil, iconSpacing: CGFloat = 16, position: Position = .top, onTap: (() -> Void)? = nil) {
         self.position = position
 
         super.init(frame: .zero)
@@ -297,9 +298,11 @@ public class ToastView: UIView {
 class ToastViewWindow: UIWindow {
     init(toastView: ToastView) {
         if #available(iOS 13.0, *) {
-            if let activeForegroundScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            if let activeForegroundScene = UIApplication.shared.connectedScenes
+                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
                 super.init(windowScene: activeForegroundScene)
-            } else if let inactiveForegroundScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundInactive }) as? UIWindowScene {
+            } else if let inactiveForegroundScene = UIApplication.shared.connectedScenes
+                .first(where: { $0.activationState == .foregroundInactive }) as? UIWindowScene {
                 super.init(windowScene: inactiveForegroundScene)
             } else {
                 super.init(frame: UIScreen.main.bounds)
@@ -318,7 +321,7 @@ class ToastViewWindow: UIWindow {
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        if let rootViewController = self.rootViewController,
+        if let rootViewController = rootViewController,
            let toastView = rootViewController.view.subviews.first as? ToastView {
             return toastView.frame.contains(point)
         }
