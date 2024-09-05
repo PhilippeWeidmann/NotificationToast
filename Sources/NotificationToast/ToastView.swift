@@ -168,8 +168,8 @@ public class ToastView: UIView {
         clipsToBounds = true
     }
 
-    func prepareForShowing() {
-        overlayWindow = ToastViewWindow(toastView: self)
+    func prepareForShowing(originWindowScene: UIWindowScene?) {
+        overlayWindow = ToastViewWindow(toastView: self, originWindowScene: originWindowScene)
         setupConstraints(position: position)
         setupStackViewConstraints()
         overlayWindow?.isHidden = false
@@ -180,17 +180,14 @@ public class ToastView: UIView {
         layer.cornerRadius = bounds.height / 2
     }
 
-    public func show(haptic: UINotificationFeedbackGenerator.FeedbackType? = nil) {
-        if let hapticType = haptic {
-            UINotificationFeedbackGenerator().notificationOccurred(hapticType)
+    public func show(originWindowScene: UIWindowScene? = nil, haptic: UINotificationFeedbackGenerator.FeedbackType? = nil) {
+        if let haptic {
+            UINotificationFeedbackGenerator().notificationOccurred(haptic)
         }
-        show()
-    }
-
-    public func show() {
+        
         if overlayWindow == nil {
             // We don't have a window we need to recreate one
-            prepareForShowing()
+            prepareForShowing(originWindowScene: originWindowScene)
         } else {
             // We are still showing an alert with current window so we do nothing
             return
@@ -280,8 +277,10 @@ public class ToastView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 class ToastViewWindow: UIWindow {
-    init(toastView: ToastView) {
-        if let activeForegroundScene = UIApplication.shared.connectedScenes
+    init(toastView: ToastView, originWindowScene: UIWindowScene?) {
+        if let originWindowScene {
+            super.init(windowScene: originWindowScene)
+        } else if let activeForegroundScene = UIApplication.shared.connectedScenes
             .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
             super.init(windowScene: activeForegroundScene)
         } else if let inactiveForegroundScene = UIApplication.shared.connectedScenes
