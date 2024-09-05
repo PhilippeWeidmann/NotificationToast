@@ -53,20 +53,13 @@ public class ToastView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        if #available(iOS 13.0, *) {
-            label.textColor = .label
-        } else {
-            label.textColor = .black
-        }
+        label.textColor = .label
+
         return label
     }()
 
     private var viewBackgroundColor: UIColor? {
-        if #available(iOS 12.0, *) {
-            return traitCollection.userInterfaceStyle == .dark ? darkBackgroundColor : lightBackgroundColor
-        } else {
-            return lightBackgroundColor
-        }
+        return lightBackgroundColor
     }
 
     private var vStackAlignment: UIStackView.Alignment {
@@ -150,22 +143,14 @@ public class ToastView: UIView {
                 iconImageView.widthAnchor.constraint(equalToConstant: 28),
                 iconImageView.heightAnchor.constraint(equalToConstant: 28)
             ])
-            if #available(iOS 13.0, *) {
-                iconImageView.tintColor = .label
-            } else {
-                iconImageView.tintColor = .black
-            }
+            iconImageView.tintColor = .label
             iconImageView.image = icon
             hStack.addArrangedSubview(iconImageView)
         }
 
         if let subtitle = subtitle {
             let subtitleLabel = UILabel()
-            if #available(iOS 13.0, *) {
-                subtitleLabel.textColor = .secondaryLabel
-            } else {
-                subtitleLabel.textColor = .lightGray
-            }
+            subtitleLabel.textColor = .secondaryLabel
             subtitleLabel.numberOfLines = 0
             subtitleLabel.font = subtitleFont
             subtitleLabel.text = subtitle
@@ -195,7 +180,6 @@ public class ToastView: UIView {
         layer.cornerRadius = bounds.height / 2
     }
 
-    @available(iOS 10.0, *)
     public func show(haptic: UINotificationFeedbackGenerator.FeedbackType? = nil) {
         if let hapticType = haptic {
             UINotificationFeedbackGenerator().notificationOccurred(hapticType)
@@ -297,16 +281,12 @@ public class ToastView: UIView {
 @available(iOSApplicationExtension, unavailable)
 class ToastViewWindow: UIWindow {
     init(toastView: ToastView) {
-        if #available(iOS 13.0, *) {
-            if let activeForegroundScene = UIApplication.shared.connectedScenes
-                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-                super.init(windowScene: activeForegroundScene)
-            } else if let inactiveForegroundScene = UIApplication.shared.connectedScenes
-                .first(where: { $0.activationState == .foregroundInactive }) as? UIWindowScene {
-                super.init(windowScene: inactiveForegroundScene)
-            } else {
-                super.init(frame: UIScreen.main.bounds)
-            }
+        if let activeForegroundScene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            super.init(windowScene: activeForegroundScene)
+        } else if let inactiveForegroundScene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundInactive }) as? UIWindowScene {
+            super.init(windowScene: inactiveForegroundScene)
         } else {
             super.init(frame: UIScreen.main.bounds)
         }
